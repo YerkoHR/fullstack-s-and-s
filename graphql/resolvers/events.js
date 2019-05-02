@@ -15,7 +15,10 @@ module.exports = {
         throw err;
       });
   },
-  createEvent: args => {
+  createEvent: (args, req) => {
+    if (!req.isAuth) {
+      throw new Error("Not authenticated");
+    }
     const { title, description, price, date } = args.eventInput;
 
     const event = new Event({
