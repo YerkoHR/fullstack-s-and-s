@@ -26,14 +26,14 @@ module.exports = {
       description,
       price: +price,
       date: new Date(date),
-      creator: "5cb46763fc4b6c20d8103a8d"
+      creator: req.userId
     });
     let createdEvent;
     return event
       .save()
       .then(res => {
         createdEvent = transformEvent(res);
-        return User.findById("5cb46763fc4b6c20d8103a8d");
+        return User.findById(req.userId);
       })
       .then(user => {
         if (!user) {

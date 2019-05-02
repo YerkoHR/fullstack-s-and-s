@@ -24,7 +24,7 @@ module.exports = {
     return Event.findOne({ _id: args.eventId })
       .then(event => {
         const newBooking = new Booking({
-          user: "5cb46763fc4b6c20d8103a8d",
+          user: req.userId,
           event
         });
         return newBooking.save();
