@@ -19,7 +19,7 @@ module.exports = {
     if (!req.isAuth) {
       throw new Error("Not authenticated");
     }
-    // 451 with deconstruction.
+
     const {
       title,
       synopsis,
@@ -66,7 +66,6 @@ module.exports = {
         return savedAnime;
       })
       .catch(err => {
-        console.log(err);
         throw err;
       });
   }
