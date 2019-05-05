@@ -11,10 +11,10 @@ const userSchema = new Schema({
     type: String,
     required: true
   },
-  createdEvents: [
+  savedAnime: [
     {
       type: Schema.Types.ObjectId,
-      ref: "Event"
+      ref: "Anime"
     }
   ]
 });

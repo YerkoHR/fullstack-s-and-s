@@ -1,11 +1,21 @@
 const { buildSchema } = require("graphql");
 
 module.exports = buildSchema(`
-type Event {
+
+type Anime {
   _id: ID!
   title: String!
-  description: String!
-  price: Float!
+  synopsis: String!
+  image: String!
+  broadcast: String!
+  format: String!
+  status: String!
+  source: String!
+  episodes: Int!
+  score: Float!
+  genres: [String!]
+  createdAt: String!
+  updatedAt: String!
   date: String!
   creator: User!
 }
@@ -14,7 +24,7 @@ type User {
   _id: ID!
   email: String!
   password: String
-  createdEvents: [Event!]
+  savedAnime: [Anime!]
 }
 
 type AuthData {
@@ -23,18 +33,17 @@ type AuthData {
   tokenExpiration: Int!
 }
 
-type Booking {
-  _id: ID!
-  event: Event!
-  user: User!
-  createdAt: String!
-  updatedAt: String!
-}
-
-input EventInput {
+input AnimeInput {
   title: String!
-  description: String!
-  price: Float!
+  synopsis: String!
+  image: String!
+  broadcast: String!
+  format: String!
+  status: String!
+  source: String!
+  episodes: Int!
+  score: Float!
+  genres: [String!]!
   date: String!
 }
 
@@ -44,16 +53,13 @@ input UserInput {
 }
 
 type RootQuery {
-    events: [Event!]!
-    bookings: [Booking!]!
+    animes: [Anime!]!
     login(email: String!, password: String!): AuthData! 
 }
 
 type RootMutation {
-    createEvent(eventInput: EventInput): Event
+    saveAnime(animeInput: AnimeInput): Anime
     createUser(userInput: UserInput): User
-    bookEvent(eventId: ID!): Booking!
-    cancelBooking(bookingId: ID!): Event!
 }
 
 schema {

@@ -1,41 +1,24 @@
-const Event = require("../../models/event");
+const Anime = require("../../models/anime");
 const User = require("../../models/user");
 const { dateToString } = require("../../helpers/date");
 
-const transformEvent = event => {
+const transformAnime = anime => {
   return {
-    ...event._doc,
-    _id: event.id,
-    date: dateToString(event._doc.date),
-    creator: user.bind(this, event.creator)
+    ...anime._doc,
+    _id: anime.id,
+    date: dateToString(anime._doc.date),
+    createdAt: dateToString(anime._doc.createdAt),
+    updatedAt: dateToString(anime._doc.updatedAt),
+    creator: user.bind(this, anime.creator)
   };
-};
-const transformBooking = booking => {
-  return {
-    ...booking._doc,
-    _id: booking.id,
-    user: user.bind(this, booking._doc.user),
-    event: singleEvent.bind(this, booking._doc.event),
-    createdAt: dateToString(booking._doc.createdAt),
-    updatedAt: dateToString(booking._doc.updatedAt)
-  };
-};
-const events = eventsIds => {
-  return Event.find({ _id: { $in: eventsIds } })
-    .then(events => {
-      return events.map(event => {
-        return transformEvent(event);
-      });
-    })
-    .catch(err => {
-      throw err;
-    });
 };
 
-const singleEvent = eventId => {
-  return Event.findById(eventId)
-    .then(event => {
-      return transformEvent(event);
+const animes = animeIds => {
+  return Anime.find({ _id: { $in: animeIds } })
+    .then(animes => {
+      return animes.map(anime => {
+        return transformAnime(anime);
+      });
     })
     .catch(err => {
       throw err;
@@ -48,7 +31,7 @@ const user = userId => {
       return {
         ...user._doc,
         _id: user.id,
-        createdEvents: events.bind(this, user._doc.createdEvents)
+        savedAnimes: animes.bind(this, user._doc.savedAnimes)
       };
     })
     .catch(err => {
@@ -56,5 +39,4 @@ const user = userId => {
     });
 };
 
-exports.transformBooking = transformBooking;
-exports.transformEvent = transformEvent;
+exports.transformAnime = transformAnime;
