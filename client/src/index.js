@@ -6,7 +6,6 @@ import Results from "./Results";
 import "./styles.css";
 
 const App = () => {
-  const [ids, onIds] = useState([34134, 30276]);
   const [active, onActive] = useState("Home");
 
   return (
@@ -16,8 +15,8 @@ const App = () => {
       <button onClick={() => onActive("Search")}>Search</button>
 
       <div className="content">
-        {active === "Saved" && <Saved ids={ids} />}
-        {active === "Search" && <Results onIds={onIds} ids={ids} />}
+        {active === "Saved" && <Saved />}
+        {active === "Search" && <Results />}
         {active === "Home" && <div>Home</div>}
       </div>
     </div>

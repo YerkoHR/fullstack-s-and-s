@@ -2,43 +2,16 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-const eventSchema = new Schema(
+const animeSchema = new Schema(
   {
-    title: {
-      type: String,
-      required: true
-    },
-    synopsis: {
-      type: String,
-      required: true
-    },
-    image: {
-      type: String,
-      required: true
-    },
-    broadcast: {
-      type: String,
-      required: true
-    },
-    format: {
-      type: String,
-      required: true
-    },
-    status: {
-      type: String,
-      required: true
-    },
-    source: {
-      type: String,
+    mal_id: {
+      type: Number,
       required: true
     },
     date: {
       type: Date,
       required: true
     },
-    episodes: Number,
-    score: Number,
-    genres: [String],
     creator: {
       type: Schema.Types.ObjectId,
       ref: "User"
@@ -49,4 +22,4 @@ const eventSchema = new Schema(
   }
 );
 
-module.exports = mongoose.model("Anime", eventSchema);
+module.exports = mongoose.model("Anime", animeSchema);

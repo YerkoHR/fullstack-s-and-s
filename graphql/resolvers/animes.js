@@ -20,32 +20,9 @@ module.exports = {
       throw new Error("Not authenticated");
     }
 
-    const {
-      title,
-      synopsis,
-      image,
-      broadcast,
-      format,
-      status,
-      source,
-      episodes,
-      score,
-      genres,
-      date
-    } = args.animeInput;
-
     const anime = new Anime({
-      title,
-      synopsis,
-      image,
-      broadcast,
-      format,
-      status,
-      source,
-      episodes,
-      score,
-      genres,
-      date: new Date(date),
+      mal_id: args.id,
+      date: new Date(),
       creator: req.userId
     });
     let savedAnime;

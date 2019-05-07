@@ -4,16 +4,7 @@ module.exports = buildSchema(`
 
 type Anime {
   _id: ID!
-  title: String!
-  synopsis: String!
-  image: String!
-  broadcast: String!
-  format: String!
-  status: String!
-  source: String!
-  episodes: Int!
-  score: Float!
-  genres: [String!]
+  mal_id: Int!
   createdAt: String!
   updatedAt: String!
   date: String!
@@ -33,20 +24,6 @@ type AuthData {
   tokenExpiration: Int!
 }
 
-input AnimeInput {
-  title: String!
-  synopsis: String!
-  image: String!
-  broadcast: String!
-  format: String!
-  status: String!
-  source: String!
-  episodes: Int!
-  score: Float!
-  genres: [String!]!
-  date: String!
-}
-
 input UserInput {
   email: String!
   password: String!
@@ -58,7 +35,7 @@ type RootQuery {
 }
 
 type RootMutation {
-    saveAnime(animeInput: AnimeInput): Anime
+    saveAnime(id: Int!): Anime!
     createUser(userInput: UserInput): User
 }
 

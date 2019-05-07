@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const Results = ({ onIds, ids }) => {
+// HERE WE RECEIVE AN AUTH ERROR BECAUSE THE TOKEN IS CHANGED AFTER 1 HOUR
+// SO THE ONE IN THE BOTTOM IS EXPIRED.
+
+const Results = () => {
   const [input, onInput] = useState("");
   const [results, onResults] = useState([]);
   const [loading, onLoading] = useState(false);
@@ -13,6 +16,35 @@ const Results = ({ onIds, ids }) => {
       .then(res => {
         onLoading(false);
         onResults(res.data.results);
+      });
+  };
+
+  const token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1Y2NlMzJkNzBkYzZhYzBkNzg4MGFhYTIiLCJlbWFpbCI6IjEyM0AxMjMuY29tIiwiaWF0IjoxNTU3MTM1NDIzLCJleHAiOjE1NTcxMzkwMjN9.Ws1efMKbBH2GO90ZVwImtcDjfGiCM5w-gJA32lC7m7s";
+
+  const handleSave = id => {
+    axios({
+      url: "/graphql",
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token
+      },
+      data: {
+        query: `
+        mutation {
+          saveAnime(id: ${id}) {
+            mal_id
+          }
+        }
+      `
+      }
+    })
+      .then(res => {
+        onLoading(false);
+      })
+      .catch(err => {
+        console.log(err);
       });
   };
 
@@ -30,10 +62,7 @@ const Results = ({ onIds, ids }) => {
           {results.map(r => (
             <>
               <div>{r.title}</div>
-              <button
-                className="btn-add"
-                onClick={() => onIds([...ids, r.mal_id])}
-              >
+              <button className="btn-add" onClick={() => handleSave(r.mal_id)}>
                 Add
               </button>
             </>

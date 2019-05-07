@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-const Saved = ({ ids }) => {
+// TO DO: ADD AN ANIME ID WITH POSTMAN AND CHECK IT THIS
+// ASYNC DOUBLE FETCH WORK. -> one punch mal id:  34134
+
+const Saved = () => {
   const [data, onData] = useState([]);
   const [loading, onLoading] = useState(false);
 
@@ -9,19 +12,20 @@ const Saved = ({ ids }) => {
     return axios.get(`https://api.jikan.moe/v3/anime/${id}`);
   };
 
-  const apiCallFinal = () => {
-    const apiArray = ids.map(id => apiCall(id));
+  const apiCallFinal = ids => {
+    const apiArray = ids.map(id => apiCall(id.mal_id));
     onLoading(true);
     return axios.all(apiArray).then(res => {
       onLoading(false);
-      onData(res.map(r => r.data));
-      console.log("Data Updated");
+      onData(
+        res.map((r, i) => {
+          return { ...r.data, dbId: ids[i]._id };
+        })
+      );
     });
   };
 
   const fetchSaved = () => {
-    onLoading(true);
-
     axios({
       url: "/graphql",
       method: "post",
@@ -32,7 +36,7 @@ const Saved = ({ ids }) => {
         query: `
         query {
           animes {
-            title
+            mal_id
             _id
           }
         }
@@ -40,8 +44,7 @@ const Saved = ({ ids }) => {
       }
     })
       .then(res => {
-        onLoading(false);
-        onData(res.data.data.animes);
+        apiCallFinal(res.data.data.animes);
       })
       .catch(err => {
         console.log(err);
@@ -49,8 +52,6 @@ const Saved = ({ ids }) => {
   };
 
   useEffect(() => {
-    //apiCallFinal();
-    //}, [ids]);
     fetchSaved();
   }, []);
 
@@ -61,7 +62,7 @@ const Saved = ({ ids }) => {
       ) : (
         <div>
           {data.map(d => (
-            <div key={d._id}>{d.title}</div>
+            <div key={d.dbId}>{d.mal_id}</div>
           ))}
         </div>
       )}
