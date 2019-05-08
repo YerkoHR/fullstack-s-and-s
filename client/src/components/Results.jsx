@@ -4,7 +4,7 @@ import axios from "axios";
 // HERE WE RECEIVE AN AUTH ERROR BECAUSE THE TOKEN IS CHANGED AFTER 1 HOUR
 // SO THE ONE IN THE BOTTOM IS EXPIRED.
 
-const Results = () => {
+const Results = ({ token }) => {
   const [input, onInput] = useState("");
   const [results, onResults] = useState([]);
   const [loading, onLoading] = useState(false);
@@ -18,9 +18,6 @@ const Results = () => {
         onResults(res.data.results);
       });
   };
-
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1Y2NlMzJkNzBkYzZhYzBkNzg4MGFhYTIiLCJlbWFpbCI6IjEyM0AxMjMuY29tIiwiaWF0IjoxNTU3MTM1NDIzLCJleHAiOjE1NTcxMzkwMjN9.Ws1efMKbBH2GO90ZVwImtcDjfGiCM5w-gJA32lC7m7s";
 
   const handleSave = id => {
     axios({
@@ -42,6 +39,7 @@ const Results = () => {
     })
       .then(res => {
         onLoading(false);
+        console.log(res);
       })
       .catch(err => {
         console.log(err);
