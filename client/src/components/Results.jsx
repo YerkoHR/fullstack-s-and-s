@@ -1,22 +1,37 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-// HERE WE RECEIVE AN AUTH ERROR BECAUSE THE TOKEN IS CHANGED AFTER 1 HOUR
-// SO THE ONE IN THE BOTTOM IS EXPIRED.
-
 const Results = ({ token }) => {
   const [input, onInput] = useState("");
   const [results, onResults] = useState([]);
   const [loading, onLoading] = useState(false);
 
-  const fetchResults = query => {
+  const fetchResults = search => {
+    const s = JSON.stringify(search);
+
     onLoading(true);
-    return axios
-      .get(`https://api.jikan.moe/v3/search/anime?q=${query}&page=1`)
-      .then(res => {
-        onLoading(false);
-        onResults(res.data.results);
-      });
+    return axios({
+      url: "https://graphql.anilist.co",
+      method: "post",
+      data: {
+        query: `
+        query {
+            Page {
+                media(search: ${s}, type: ANIME) {
+                  idMal
+                  title {
+                      romaji
+                  }
+                    
+                }
+            }
+        }
+    `
+      }
+    }).then(res => {
+      onLoading(false);
+      onResults(res.data.data.Page.media);
+    });
   };
 
   const handleSave = id => {
@@ -36,18 +51,13 @@ const Results = ({ token }) => {
         }
       `
       }
-    })
-      .then(res => {
-        onLoading(false);
-        console.log(res);
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    }).catch(err => {
+      console.log(err);
+    });
   };
 
   return (
-    <>
+    <div>
       <div>
         <input onChange={e => onInput(e.target.value)} value={input} />
         <button onClick={() => fetchResults(input)}>Search</button>
@@ -58,16 +68,16 @@ const Results = ({ token }) => {
       ) : (
         <div>
           {results.map(r => (
-            <>
-              <div>{r.title}</div>
-              <button className="btn-add" onClick={() => handleSave(r.mal_id)}>
+            <div key={r.idMal}>
+              <div>{r.title.romaji}</div>
+              <button className="btn-add" onClick={() => handleSave(r.idMal)}>
                 Add
               </button>
-            </>
+            </div>
           ))}
         </div>
       )}
-    </>
+    </div>
   );
 };
 
